@@ -43,6 +43,11 @@ Next, you'll need to install Quilt using Node's package manager:
 $ npm install -g @quilt/install
 ```
 
+Note that if installing as root, the `--unsafe-perm` flag is required:
+```console
+$ sudo npm install -g @quilt/install --unsafe-perm
+```
+
 To allow Quilt to launch Amazon EC2 instances, you need to use configure AWS.
 The easiest way to do this is by setting environment variables:
 
