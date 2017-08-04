@@ -1,6 +1,6 @@
 'use strict';
 
-const HaProxy = require('@quilt/haproxy');
+const haproxy = require('@quilt/haproxy');
 const Mongo = require('@quilt/mongo');
 const Node = require('@quilt/nodejs');
 const {publicInternet} = require('@quilt/quilt');
@@ -16,15 +16,15 @@ function TodoApp(count) {
       MONGO_URI: this.mongo.uri('mean-example'),
     },
   });
-  this.haproxy = new HaProxy(1, this.app.services());
+  this.proxy = haproxy.singleServiceLoadBalancer(1, this.app._app);
 
   this.app.connect(this.mongo.port, this.mongo);
-  this.haproxy.service.allowFrom(publicInternet, port);
+  this.proxy.allowFrom(publicInternet, haproxy.exposedPort);
 
   this.deploy = function(deployment) {
     deployment.deploy(this.app);
     deployment.deploy(this.mongo);
-    deployment.deploy(this.haproxy);
+    deployment.deploy(this.proxy);
   }
 }
 
