@@ -21,7 +21,7 @@ function TodoApp(count) {
   // eslint-disable-next-line no-underscore-dangle
   this.proxy = haproxy.singleServiceLoadBalancer(1, this.app._app);
 
-  this.app.connect(this.mongo.port, this.mongo);
+  this.mongo.allowFrom(this.app, this.mongo.port);
   this.proxy.allowFrom(publicInternet, haproxy.exposedPort);
 
   this.deploy = function deploy(deployment) {
