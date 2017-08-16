@@ -15,13 +15,9 @@ function TodoApp(count) {
     },
   });
 
-  // The Node module isn't designed well for composition right now, so we have
-  // to access this.app._app directly. Until this is fixed, silence the linter
-  // warning about underscore dangles.
-  // eslint-disable-next-line no-underscore-dangle
-  this.proxy = haproxy.singleServiceLoadBalancer(1, this.app._app);
+  this.proxy = haproxy.simpleLoadBalancer(this.app.cluster);
 
-  this.mongo.allowFrom(this.app, this.mongo.port);
+  this.mongo.allowFrom(this.app.cluster, this.mongo.port);
   this.proxy.allowFrom(publicInternet, haproxy.exposedPort);
 
   this.deploy = function deploy(deployment) {
